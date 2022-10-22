@@ -24,8 +24,13 @@ def convertir_archivos (id):
         row = datos_tarea.fetchone()
         fileNameOrig = row._mapping["fileName"]
         newFormat = row._mapping["newFormat"]
-        #email = row._mapping["email"]
-        email = "ja.ruedat1@uniandes.edu.co"
+        id_user = row._mapping["id_user"]
+         
+        usuario = db.Table('usuario', metadata, autoload=True, autoload_with=engine)
+        stmt = usuario.select().where(usuario.c.id==id_user)
+        datos_usuario = connection.execute(stmt)
+        row_usua = datos_usuario.fetchone()
+        email = row_usua._mapping["email"]
 
         file_name, file_extension = os.path.splitext(fileNameOrig)
         file_extension = file_extension.replace(".","")
