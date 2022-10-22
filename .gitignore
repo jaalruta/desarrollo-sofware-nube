@@ -124,6 +124,10 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+.DS_Store
+*.rdb
 
 # Pyre type checker
 .pyre/
+*.db
+uploads
