@@ -1,4 +1,4 @@
-# Instrucciones de instalacion
+# Instrucciones de instalación
   A continuacíon se explican los pasos y requisitos que se deben cumplir para la correcta instalación de la aplicación
 ## Requisitos de maquina virtual
   Para la instalación de la maquina virtual se debe contar con una maquina virtual con lo siguientes requisitos minimos 
@@ -154,7 +154,33 @@
 
 ## instalacion de la aplicación
 
+  Descargaremos la aplicacion desde el repositorio de git al escritorio de la maquina virtual
+  
+  ```
+  git clone https://github.com/jaalruta/desarrollo-sofware-nube.git
+  ```
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197415327-3d8a8ea4-3c45-459e-a515-2596f5d5f178.png)
+  
+  entraremos al la carpeta y crearemos el ambiente virtual
+  ```
+  cd desarrollo-sofware-nube
+  python3 -m venv venv
+  ```
+  ![imagen](https://user-images.githubusercontent.com/98671337/197415497-a7103f57-8de0-469c-87e4-aa54f9614da7.png)
+  
+  activaremos el ambiente virtual
+  ```
+  . venv/bin/activate
+  ```
+  ![imagen](https://user-images.githubusercontent.com/98671337/197415544-1d55d410-64f8-4c21-8bf3-22267f6a99a5.png)
 
+  
+  Instalaremos las dependencias
+  
+  ```
+  pip install -r requirements.txt
+  ```
 
 
 
