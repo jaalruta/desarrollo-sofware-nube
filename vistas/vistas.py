@@ -53,12 +53,12 @@ class VistaLogIn(Resource):
 
 
 class VistaTarea(Resource):            
-    @jwt_required()
+    @jwt_required
     def get(self, id):
         uid = get_jwt_identity()
         return [tarea_schema.dump(ca) for ca in Tarea.query.filter(Tarea.id_user==uid , Tarea.id==id).all()]
 
-    @jwt_required()
+    @jwt_required
     def put(self, id):
         uid = get_jwt_identity()
         if request.json == None or not "newFormat" in request.json:
@@ -84,7 +84,7 @@ class VistaTarea(Resource):
         return {'mensaje': 'Tarea Eliminada Correctamente'}
 
 class VistaTareas(Resource):
-    @jwt_required()
+    @jwt_required
     def get(self):
         uid = get_jwt_identity()
         args = request.args
@@ -98,7 +98,7 @@ class VistaTareas(Resource):
         else:
             return [tarea_schema.dump(ca) for ca in Tarea.query.filter(Tarea.id_user==uid).order_by(asc(Tarea.id)).limit(registros).all()]
 
-    @jwt_required()
+    @jwt_required
     def post(self):
         
         uid = get_jwt_identity()
@@ -134,7 +134,7 @@ class VistaTareas(Resource):
         
         
 class VistaArchivos(Resource):
-    @jwt_required()
+    @jwt_required
     def get(self,id,estado):
         uid = get_jwt_identity()
         tarea = Tarea.query.get_or_404(id)
