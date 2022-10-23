@@ -102,9 +102,57 @@
   - [Postgresql](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04)
   - [ffmpeg](https://linuxize.com/post/how-to-install-ffmpeg-on-ubuntu-20-04/)
   - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+  
+  Una vez instalado lo anterior debemos ejecutar el siguiente comando para instalar pip
+  
+  ```
+  sudo apt install python3-pip
+  ```
+  
+  ### configuración de la base de datos
+  
+  Se debe ejecutar el siguiente comando para acceder al cliente por consola de postgresql
+  
+  ```
+  sudo -u postgres psql
+  ```
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197405325-08fe8766-9fd6-4cb0-8eee-7b445449b7b3.png)
+  
+  Luego debemos crear la base de datos con el siguiente comando
+  
+  ```
+  CREATE DATABASE conversor;
+  ```
+  y luego 
+  
+  ```
+   ALTER USER postgres WITH PASSWORD 'admin';
+  ```
+  y luego
+  
+  ```
+  \q
+  ```
+  ### libreria entorno virtual python
+  
+  Se debe ejecutar el siguiente comando
+  ```
+  sudo apt install python3-venv
+  ```
+  
+  ### configuración libreria postgresql
+  
+  Se debe ejecutar el siguiente comando
+  ```
+  sudo apt-get install libpq-dev
+  ```
+  ### intalacion gunicorn
+  ```
+  sudo apt install gunicorn
+  ```
 
-
-
+## instalacion de la aplicación
 
 
 
