@@ -181,11 +181,85 @@
   ```
   pip install -r requirements.txt
   ```
-
-
-
-
   
+## ejecución de la aplicación
+  
+  ### Ejecutar la aplicación flask
+  
+  El siguiente comando nos permitira ejecutar la aplicación y verificar que no exista ningun problema
+  ```
+  flask run
+  ```
+  Debemos obtener un mensaje como el siguiente
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420435-e2606d3a-46af-4345-bf9e-dc6c362e0536.png)
+
+  luego de verificar que la aplicación se ejecuta correctamente deberemos detener su ejecución con
+  ```
+  CTRL + c
+  ```
+  
+  ### Ejecutar Gunicorn
+  
+  Para ejecutar la aplicacion con gunicorn el cual nos permitira tener procesamiento en varios hilos, para esto usaremos el siguiente comando
+  
+  ```
+  gunicorn -w 4 --bind 0.0.0.0:5000 wsgi:app --daemon
+  ```
+  
+  con el siguiente comando podremos validar que se este ejecutando el proceso de gunicorn
+  
+  ```
+  ps -aux | grep gunicorn
+  ```
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420647-e939e187-d436-4e02-a9c4-2be3280e988d.png)
+
+  ### Ejecutar celery
+  
+  Para ejecutar celery usaremos el siguiente comando
+  
+  ```
+  celery -A tareas.tareas worker -l INFO
+  ```
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420749-9e84dc81-5164-4f07-bf7e-b6eb5c49dbde.png)
+
+  Con los pasos anteriores la aplicación estara lista para correr.
+  
+  ### Configuración adicional en virtual box si se quieren hacer peticiones con postman desdel el host
+  
+  Para poder conectar el host y la maquina virtual , se debe hacer lo siguiente
+  
+  Click en el boton configuracion
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420841-012c006b-043a-4f38-820e-567efe5215a1.png)
+
+
+  Despues iremos a Red y desplegaremos las opciones avanzadas
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420874-af21492a-b0e5-4d20-9922-c8597f9db470.png)
+  
+  luego usaremos el boton reenvío de puertos
+  
+  En esta ventana debemos dar click en el boton
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420937-e179cea4-a5bb-4a9a-bc12-95b8505bf1c3.png)
+  
+  y luego procedemos a realizar el mapeo de la conexion con la maquina virtual
+  ![imagen](https://user-images.githubusercontent.com/98671337/197420949-45a72bdb-2b25-42db-9f98-2039e8255d49.png)
+
+
+  En la configuración de ejemplo cuando ingresen a la direccion 127.0.0.1 con puerto 6000 , el trafico sera redireccionado al puerto 5000 de la maquina virtual (notese que el apartado de ejemplo de la ejecución de gunicor se puso como puerto el 5000)
+
+  con lo anterior podremos ejecutar desde postman en el host lss operaciones de la aplicacion que estan en la maquina virtual
+  
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197421065-8fc82b57-3486-4e8c-be90-f86ce84ae1f9.png)
+
+
+## Documentación de las operacion del servicio
+
+La documentación puede ser consultada en el siguiente link
+
+
 
 
 
