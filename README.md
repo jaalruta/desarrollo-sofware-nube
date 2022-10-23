@@ -98,10 +98,68 @@
 
 ## Requisitos de software de la aplicación
   Para la aplicación debemos contar con el siguiente software instalado en la maquina virtual (en cada uno de los enlaces esta la instrucción de instalación)
-  - [Redis](https://redis.io/docs/getting-started/installation/install-redis-on-linux/)
-  - [Postgresql](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04)
-  - [ffmpeg](https://linuxize.com/post/how-to-install-ffmpeg-on-ubuntu-20-04/)
-  - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+  ###Instalar redis
+  para instalar redis debemos ejecitar el siguiente comando 
+  ```
+  sudo apt install redis-server
+  ```
+  
+  para verificar que se instalo correctamente debemos ejecutar el siguiente comando
+  ```
+  redis-cli --version
+  ```
+  nos debera responder de una manera similar a esta
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197421841-c4300aa3-a9d2-4efa-bf80-63c4c7d70801.png)
+  
+  ###Instalar Postgresql
+  
+  Para instalar postgresql debemos ejecutar el siguiente comando
+ 
+  ```
+  sudo apt install postgresql postgresql-contrib
+  ```
+  para validar que se instalo de manera correcta debemos ejecutar el siguiente comando
+  
+  ```
+  psql --version
+  ```
+  nos debera responder de una manera similar a esta
+  ![imagen](https://user-images.githubusercontent.com/98671337/197421938-1a8d7138-6d0d-4b80-a32d-aa871107162e.png)
+  
+  ###Instalar ffmpeg
+  
+  Para instalar la libreria que nos ayudara a convertir archivos de audio debemo ejecutar el siguiente comando
+  ```
+  sudo apt update
+  sudo apt install ffmpeg
+  ```
+  
+  para validar que se instalo de manera correcta debemos ejecutar el siguiente comando
+  
+  ```
+  ffmpeg -version
+  ```
+  nos debera responder de una manera similar a esta
+  
+  ![imagen](https://user-images.githubusercontent.com/98671337/197422070-58511331-ab5e-4405-9544-aa248dff1442.png)
+
+  ###Instalar git
+  
+  Normalmente git se instala por defecto en la version de ubuntu recomendada , para verificar la instalación se debe ejecutar el siguiente comando
+  
+  ```
+  git --version
+  ```
+  
+  si nos responde de una manera similar a esta git estara instalado
+  ![imagen](https://user-images.githubusercontent.com/98671337/197422113-531bac03-460c-485f-a85e-de54f974eb6a.png)
+
+  De lo contrario se deberan seguir las siguientes instrucciones
+  
+  [instalar git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+  
+  ###Instalar pip
   
   Una vez instalado lo anterior debemos ejecutar el siguiente comando para instalar pip
   
