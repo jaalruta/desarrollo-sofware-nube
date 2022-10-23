@@ -307,7 +307,7 @@
 
   En la configuración de ejemplo cuando ingresen a la direccion 127.0.0.1 con puerto 6000 , el trafico sera redireccionado al puerto 5000 de la maquina virtual (notese que el apartado de ejemplo de la ejecución de gunicor se puso como puerto el 5000)
 
-  con lo anterior podremos ejecutar desde postman en el host lss operaciones de la aplicacion que estan en la maquina virtual
+  con lo anterior podremos ejecutar desde postman en el host lss operaciones de la aplicacion que estan en la maquina virtual , en necesario apagar la maquina virtual y volver a ejecutarla para que tome la configuración
   
   
   ![imagen](https://user-images.githubusercontent.com/98671337/197421065-8fc82b57-3486-4e8c-be90-f86ce84ae1f9.png)
