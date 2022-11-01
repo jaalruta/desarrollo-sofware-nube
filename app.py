@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
 from modelos import db
-from vistas import VistaSignIn, VistaLogIn, VistaTareas, VistaTarea, VistaArchivos
+from vistas import VistaSignIn, VistaLogIn, VistaTareas, VistaTarea, VistaArchivos, VistaTest
 
 UPLOAD_FOLDER = '/uploads'
 
@@ -29,6 +29,7 @@ api.add_resource(VistaLogIn, '/login')
 api.add_resource(VistaTareas, '/tasks')
 api.add_resource(VistaTarea, '/tasks/<int:id>')
 api.add_resource(VistaArchivos, '/files/<int:id>/<string:estado>')
+api.add_resource(VistaTest, '/test')
 
 jwt = JWTManager(app)
 

@@ -5,6 +5,7 @@ from pydub import AudioSegment
 from pathlib import Path
 import smtplib, ssl
 import certifi
+from datetime import datetime
 
 celery_app =Celery(__name__,broker='redis://localhost:6379/0')
 celery_app.conf.enable_utc = False
@@ -41,8 +42,9 @@ def convertir_archivos (id):
         path.mkdir(parents=True)
         file = old_dir+fileNameOrig  
         if os.path.isfile(file):   
-
-            original = AudioSegment.from_file(file, format="mp3")
+            
+            print("tratando "+file)
+            original = AudioSegment.from_file(file,"mp3")
             original.export(new_file, format=newFormat)
         
         stmt = tarea.update().values(status = 'processed').where(tarea.c.id==id)
@@ -54,8 +56,31 @@ def convertir_archivos (id):
         receiver_email = email
         message = 'Subject: {}\n\n{}'.format("Notificacion de conversion finalizada", "Buen dia , se ha finalizado la conversion del archivo "+file_name+" con identificador "+str(id)+".")
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login("conversormiso26@gmail.com", "yjqeitpyneftgkpa")
-            server.sendmail(sender_email, receiver_email, message)
-            server.quit()
+        #with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        #    server.starttls()
+        #    server.login("conversormiso26@gmail.com", "yjqeitpyneftgkpa")
+        #    server.sendmail(sender_email, receiver_email, message)
+        #    server.quit()
+
+@celery_app.task()
+def convertir_archivos_test (id):
+
+    old_dir = "uploads/"+str(id)+"/old/"   
+    new_dir = "uploads/"+str(id)+"/new/" 
+    new_file = new_dir+"dummy.wav"
+    path = Path(new_dir)
+    path.mkdir(parents=True)
+    file = "tareas/dummy_test.mp3"
+    if os.path.isfile(file):   
+        
+        print("tratando "+file +" a ->"+new_file)
+        original = AudioSegment.from_file(file,"mp3")
+        original.export(new_file, format="wav")
+    else:
+        print("No encontrado "+file)
+
+
+    with open('tareas/log_test.txt', 'a') as f:
+        f.write('id '+str(id)+" convertido a las "+str( datetime.now() )+"\n")
+
+       
