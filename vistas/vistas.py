@@ -71,7 +71,7 @@ class VistaTarea(Resource):
         tarea.status = 'uploaded'
         db.session.commit()
 
-        dir = "uploads/"+str(tarea.id)+"/new/"
+        dir = "/nfs/uploads/"+str(tarea.id)+"/new/"
         if os.path.isdir(dir):
             shutil.rmtree(dir)
         convertir_archivos.apply_async(kwargs={'id':tarea.id}, countdown=60)
@@ -122,7 +122,7 @@ class VistaTareas(Resource):
             nuevo_tarea = Tarea(id_user=uid,fileName=filename,newFormat = newFormat,status = 'uploaded')
             db.session.add(nuevo_tarea)
             db.session.commit()
-            dir = "uploads/"+str(nuevo_tarea.id)+"/old/"
+            dir = "/nfs/uploads/"+str(nuevo_tarea.id)+"/old/"
             path = Path(dir)
             path.mkdir(parents=True)
             file.save(os.path.join(dir, filename))
@@ -142,9 +142,9 @@ class VistaArchivos(Resource):
             file_name, file_extension = os.path.splitext(tarea.fileName)
             file_extension = file_extension.replace(".","")
             fileName = tarea.fileName.replace(file_extension,tarea.newFormat)
-            dir = "uploads/"+str(id)+"/new/"+fileName
+            dir = "/nfs/uploads/"+str(id)+"/new/"+fileName
         else:
-            dir = "uploads/"+str(id)+"/old/"+tarea.fileName
+            dir = "/nfs/uploads/"+str(id)+"/old/"+tarea.fileName
         
         if os.path.isfile(dir):
             return send_file(dir)

@@ -9,7 +9,7 @@ from vistas import VistaSignIn, VistaLogIn, VistaTareas, VistaTarea, VistaArchiv
 UPLOAD_FOLDER = '/uploads'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/conversor'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@35.232.161.92:5432/conversor'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'frase-secreta'
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -32,7 +32,7 @@ api.add_resource(VistaArchivos, '/files/<int:id>/<string:estado>')
 
 jwt = JWTManager(app)
 
-        
+print('App running')        
 
 
 

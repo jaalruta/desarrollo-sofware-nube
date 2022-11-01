@@ -11,7 +11,7 @@ celery_app.conf.enable_utc = False
 
 @celery_app.task()
 def convertir_archivos (id):
-    engine = db.create_engine('postgresql://postgres:admin@localhost/conversor')
+    engine = db.create_engine('postgresql://postgres:postgres@35.232.161.92:5432/conversor')
     fileNameOrig =""
     newFormat = ""
     email = ""
@@ -34,8 +34,8 @@ def convertir_archivos (id):
 
         file_name, file_extension = os.path.splitext(fileNameOrig)
         file_extension = file_extension.replace(".","")
-        old_dir = "uploads/"+str(id)+"/old/"   
-        new_dir = "uploads/"+str(id)+"/new/" 
+        old_dir = "/nfs/uploads/"+str(id)+"/old/"   
+        new_dir = "/nfs/uploads/"+str(id)+"/new/" 
         new_file = new_dir+file_name+"."+newFormat
         path = Path(new_dir)
         path.mkdir(parents=True)
