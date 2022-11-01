@@ -56,11 +56,11 @@ def convertir_archivos (id):
         receiver_email = email
         message = 'Subject: {}\n\n{}'.format("Notificacion de conversion finalizada", "Buen dia , se ha finalizado la conversion del archivo "+file_name+" con identificador "+str(id)+".")
 
-        #with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        #    server.starttls()
-        #    server.login("conversormiso26@gmail.com", "yjqeitpyneftgkpa")
-        #    server.sendmail(sender_email, receiver_email, message)
-        #    server.quit()
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login("conversormiso26@gmail.com", "yjqeitpyneftgkpa")
+            server.sendmail(sender_email, receiver_email, message)
+            server.quit()
 
 @celery_app.task()
 def convertir_archivos_test (id):
