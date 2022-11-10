@@ -7,7 +7,7 @@ from sqlalchemy import desc,asc
 from werkzeug.utils import secure_filename
 import os,shutil
 from pathlib import Path
-from tareas import convertir_archivos
+from tareas import convertir_archivos, convertir_archivos_test
 
 from modelos import db,Usuario, UsuarioSchema,Tarea,TareaSchema
 
@@ -152,3 +152,43 @@ class VistaArchivos(Resource):
             return {"error": "Archivo No disponible"}
         
         
+class VistaTest(Resource):
+
+    @jwt_required()
+    def post(self):
+        
+        uid = get_jwt_identity()
+        
+        if 'fileName' not in request.files:
+            return {'error': 'Se debe cargar un archivo'}
+
+        file = request.files['fileName']
+        if file.filename == '':
+            return {'error': 'no se detecto archivo'}
+        fileName = file.filename 
+        
+        if request.form == None or not "newFormat" in request.form:
+            return {'error': 'Debe ingresar un formato destino'}
+        elif request.form["newFormat"].lower()  not in formats:
+            return {'error': 'El formato a convetir ingresado no es sorportado'}
+        newFormat = request.form['newFormat']
+
+        cantidad = request.form['cantidad']
+
+        if '.' in fileName and fileName.rsplit('.', 1)[1].lower() in formats:
+            for i in range(int(cantidad)):
+              filename = secure_filename(file.filename)
+              nuevo_tarea = Tarea(id_user=uid,fileName=filename,newFormat = newFormat,status = 'uploaded')
+              db.session.add(nuevo_tarea)
+              db.session.commit()
+              dir = "uploads/"+str(nuevo_tarea.id)+"/old/"
+              path = Path(dir)
+              path.mkdir(parents=True)
+
+              file.save(os.path.join(dir, filename))
+              convertir_archivos_test.apply_async(kwargs={'id':nuevo_tarea.id},countdown=1)
+            
+            
+            return {"mensaje": "Tarea creada exitosamente", "id": nuevo_tarea.id}
+        else:
+            return {'error': 'El formato del archivo ingresado no es valido'}

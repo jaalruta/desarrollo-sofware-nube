@@ -5,6 +5,7 @@ from pydub import AudioSegment
 from pathlib import Path
 import smtplib, ssl
 import certifi
+from datetime import datetime
 
 celery_app =Celery(__name__,broker='redis://localhost:6379/0')
 celery_app.conf.enable_utc = False
@@ -39,9 +40,10 @@ def convertir_archivos (id):
         new_file = new_dir+file_name+"."+newFormat
         path = Path(new_dir)
         path.mkdir(parents=True)
-        file = old_dir+fileNameOrig  
-        if os.path.isfile(file):   
+        file = old_dir+fileNameOrig
+        if os.path.isfile(file):
 
+	    # print("tratando "+file)
             original = AudioSegment.from_file(file, format="mp3")
             original.export(new_file, format=newFormat)
         
@@ -59,3 +61,26 @@ def convertir_archivos (id):
             server.login("conversormiso26@gmail.com", "yjqeitpyneftgkpa")
             server.sendmail(sender_email, receiver_email, message)
             server.quit()
+
+@celery_app.task()
+def convertir_archivos_test (id):
+
+    old_dir = "uploads/"+str(id)+"/old/"   
+    new_dir = "uploads/"+str(id)+"/new/" 
+    new_file = new_dir+"dummy.wav"
+    path = Path(new_dir)
+    path.mkdir(parents=True)
+    file = "tareas/dummy_test.mp3"
+    if os.path.isfile(file):   
+        
+        print("tratando "+file +" a ->"+new_file)
+        original = AudioSegment.from_file(file,"mp3")
+        original.export(new_file, format="wav")
+    else:
+        print("No encontrado "+file)
+
+
+    with open('tareas/log_test.txt', 'a') as f:
+        f.write('id '+str(id)+" convertido a las "+str( datetime.now() )+"\n")
+
+
