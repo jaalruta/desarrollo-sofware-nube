@@ -20,13 +20,9 @@ storage_client = storage.Client()
 BUCKET_NAME = "audio-conversor-files"
 bucket = storage_client.bucket(BUCKET_NAME)
 
-def upload_to_gcs(local_route, gcs_route):
-  blob = bucket.blob(gcs_route)
-  blob.upload_from_filename(local_route)
-
-def download_from_gcs(gcs_route, local_route):
-  blob = bucket.blob(gcs_route)
-  blob.download_to_filename(local_route)
+def upload_to_gcs(gcs_route, local_route):
+  blob = bucket.blob(destination_blob_name)
+  blob.upload_from_filename(source_file_name)destination_blob_name
 
 class VistaSignIn(Resource):
 
@@ -84,6 +80,9 @@ class VistaTarea(Resource):
         tarea.status = 'uploaded'
         db.session.commit()
 
+        dir = "/nfs/uploads/"+str(tarea.id)+"/new/"
+        if os.path.isdir(dir):
+            shutil.rmtree(dir)
         convertir_archivos.apply_async(kwargs={'id':tarea.id}, countdown=60)
         return tarea_schema.dump(tarea)
 
@@ -132,11 +131,10 @@ class VistaTareas(Resource):
             nuevo_tarea = Tarea(id_user=uid,fileName=filename,newFormat = newFormat,status = 'uploaded')
             db.session.add(nuevo_tarea)
             db.session.commit()
-            dir = "./uploads/"+str(nuevo_tarea.id)+"/old/"
+            dir = "/nfs/uploads/"+str(nuevo_tarea.id)+"/old/"
             path = Path(dir)
             path.mkdir(parents=True)
             file.save(os.path.join(dir, filename))
-            upload_to_gcs(f"./uploads/{nuevo_tarea.id}/old/{filename}",f"uploads/{nuevo_tarea.id}/old/{filename}")
             convertir_archivos.apply_async(kwargs={'id':nuevo_tarea.id}, countdown=60)
             
             return {"mensaje": "Tarea creada exitosamente", "id": nuevo_tarea.id}
@@ -153,13 +151,12 @@ class VistaArchivos(Resource):
             file_name, file_extension = os.path.splitext(tarea.fileName)
             file_extension = file_extension.replace(".","")
             fileName = tarea.fileName.replace(file_extension,tarea.newFormat)
-            gcs_dir = "uploads/"+str(id)+"/new/"+tarea.fileName
+            dir = "/nfs/uploads/"+str(id)+"/new/"+fileName
         else:
-            gcs_dir = "uploads/"+str(id)+"/old/"+tarea.fileName
-        local_file_name = f"./downloads/{tarea.fileName}"
-        download_from_gcs(gcs_dir, local_file_name)
-        if os.path.isfile(local_file_name):
-            return send_file(local_file_name)
+            dir = "/nfs/uploads/"+str(id)+"/old/"+tarea.fileName
+        
+        if os.path.isfile(dir):
+            return send_file(dir)
         else:
             return {"error": "Archivo No disponible"}
         
