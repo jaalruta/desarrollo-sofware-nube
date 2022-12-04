@@ -11,10 +11,14 @@ from tareas import convertir_archivos, convertir_archivos_test
 
 from modelos import db,Usuario, UsuarioSchema,Tarea,TareaSchema
 from google.cloud import storage
+from google.cloud import pubsub_v1
 
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 formats = ['mp3','acc','ogg','wav','wma']
+
+publisher = pubsub_v1.PublisherClient()
+topic_path = publisher.topic_path('conversor-audio', 'new_task_pubsub')
 
 storage_client = storage.Client()
 BUCKET_NAME = "audio-conversor-files"
@@ -84,7 +88,9 @@ class VistaTarea(Resource):
         tarea.status = 'uploaded'
         db.session.commit()
 
-        convertir_archivos.apply_async(kwargs={'id':tarea.id}, countdown=60)
+        #convertir_archivos.apply_async(kwargs={'id':tarea.id}, countdown=60)
+        data = {"tareaId":tarea.id}
+        publisher.publish(topic_path, str(data).encode("utf-8"), taskid=str(tarea.id))
         return tarea_schema.dump(tarea)
 
     def delete(self, id):
@@ -137,8 +143,10 @@ class VistaTareas(Resource):
             path.mkdir(parents=True)
             file.save(os.path.join(dir, filename))
             upload_to_gcs(f"./uploads/{nuevo_tarea.id}/old/{filename}",f"uploads/{nuevo_tarea.id}/old/{filename}")
-            convertir_archivos.apply_async(kwargs={'id':nuevo_tarea.id}, countdown=60)
-            
+            #convertir_archivos.apply_async(kwargs={'id':nuevo_tarea.id}, countdown=60)
+            data = {"tareaId":nuevo_tarea.id}
+            publisher.publish(topic_path, str(data).encode("utf-8"), taskid=str(nuevo_tarea.id))
+            #publisher.publish(topic_path, nuevo_tarea.id)
             return {"mensaje": "Tarea creada exitosamente", "id": nuevo_tarea.id}
         else:
             return {'error': 'El formato del archivo ingresado no es valido'}
@@ -152,10 +160,12 @@ class VistaArchivos(Resource):
         if estado == "convertido":
             file_name, file_extension = os.path.splitext(tarea.fileName)
             file_extension = file_extension.replace(".","")
-            fileName = tarea.fileName.replace(file_extension,tarea.newFormat)
+            tarea.fileName = tarea.fileName.replace(file_extension,tarea.newFormat)
             gcs_dir = "uploads/"+str(id)+"/new/"+tarea.fileName
         else:
             gcs_dir = "uploads/"+str(id)+"/old/"+tarea.fileName
+        print(gcs_dir)
+        print(tarea.newFormat)
         local_file_name = f"./downloads/{tarea.fileName}"
         download_from_gcs(gcs_dir, local_file_name)
         if os.path.isfile(local_file_name):
@@ -198,8 +208,10 @@ class VistaTest(Resource):
               path.mkdir(parents=True)
 
               file.save(os.path.join(dir, filename))
-              convertir_archivos_test.apply_async(kwargs={'id':nuevo_tarea.id},countdown=1)
-            
+              #convertir_archivos_test.apply_async(kwargs={'id':nuevo_tarea.id},countdown=1)
+              data = {"tareaId":nuevo_tarea.id}
+              publisher.publish(topic_path, str(data).encode("utf-8"), taskid=str(nuevo_tarea.id), target="test")
+              #publisher.publish(topic_path, nuevo_tarea.id)
             
             return {"mensaje": "Tarea creada exitosamente", "id": nuevo_tarea.id}
         else:
